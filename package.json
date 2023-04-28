@@ -1,0 +1,31 @@
+{
+  "name": "node-red-contrib-email",
+  "version": "0.0.1",
+  "description": "Node RED send email node",
+  "keywords": [
+    "node-red",
+    "node",
+    "email"
+  ],
+  "author": "Christopher Steinbach",
+  "homepage": "https://github.com/steineey/node-red-contrib-email#readme",
+  "bugs": "https://github.com/steineey/node-red-contrib-email/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/steineey/node-red-contrib-email"
+  },
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {
+    "nodemailer": "^6.9.1"
+  },
+  "node-red": {
+    "version": ">=2.0.0",
+    "nodes": {
+      "email": "src/email.js"
+    }
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  }
+}

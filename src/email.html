@@ -1,0 +1,130 @@
+<script type="text/javascript">
+    RED.nodes.registerType("email-transport", {
+        category: "config",
+        color: "#a6bbcf",
+        defaults: {
+            host: { value: "", required: true },
+            port: { value: "", required: true },
+            secure: { value: false },
+            authType: { value: "login" },
+            name: { value: "" },
+        },
+        credentials: {
+            user: "",
+            pass: "",
+        },
+        icon: "file.png",
+        label: function () {
+            return this.name || "email config";
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="email-transport">
+    <div class="form-row">
+        <label for="node-input-host">Host</label>
+        <input
+            type="text"
+            id="node-input-host"
+            placeholder="smtp.example.com"
+        />
+    </div>
+    <div class="form-row">
+        <label for="node-input-port">Port</label>
+        <input type="number" id="node-input-port" placeholder="465" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-secure">Secure</label>
+        <input type="checkbox" id="node-input-secure" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-authType">AuthType</label>
+        <select id="node-input-authType" style="width: calc(100% - 180px);">
+            <option value="none">none</option>
+            <option value="login">login</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-user">User</label>
+        <input type="text" id="node-input-user" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-pass">Password</label>
+        <input type="password" id="node-input-pass" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+</script>
+
+<script type="text/html" data-help-name="email-transport">
+    <p>SMTP Transport configuration</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType("email-send", {
+        category: "social",
+        color: "#a6bbcf",
+        defaults: {
+            transport: { type: "email-transport" },
+            from: { value: "" },
+            to: { value: "" },
+            cc: { value: "" },
+            bcc: { value: "" },
+            subject: { value: "" },
+            contentType: { value: "text" },
+            name: { value: "" },
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "file.png",
+        label: function () {
+            return this.name || "send email";
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="email-send">
+    <div class="form-row">
+        <label for="node-input-transport">
+            <i class="fa fa-server"></i> Transport
+        </label>
+        <input type="text" id="node-input-transport" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-from">from</label>
+        <input type="text" id="node-input-from" placeholder="msg.from" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-to">to</label>
+        <input type="text" id="node-input-to" placeholder="msg.to" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-cc">cc</label>
+        <input type="text" id="node-input-cc" placeholder="msg.cc" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-bcc">bcc</label>
+        <input type="text" id="node-input-bcc" placeholder="msg.bcc" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-subject">subject</label>
+        <input type="text" id="node-input-subject" placeholder="msg.subject" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-contentType">content type</label>
+        <select id="node-input-contentType" style="width: calc(100% - 180px);">
+            <option value="text">text</option>
+            <option value="html">html</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+</script>
+
+<script type="text/html" data-help-name="email-send">
+    <p>Send email</p>
+</script>

@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType("email-transport", {
         category: "config",
-        color: "#a6bbcf",
+        color: "#90CAF9",
         defaults: {
             host: { value: "", required: true },
             port: { value: "" },
@@ -21,11 +21,11 @@
 
 <script type="text/html" data-template-name="email-transport">
     <div class="form-row">
-        <label for="node-config-input-name">Name</label>
-        <input type="text" id="node-config-input-name" placeholder="Name" />
+        <label for="node-config-input-name">name</label>
+        <input type="text" id="node-config-input-name" placeholder="name" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-host">Host</label>
+        <label for="node-config-input-host">host</label>
         <input
             type="text"
             id="node-config-input-host"
@@ -33,15 +33,15 @@
         />
     </div>
     <div class="form-row">
-        <label for="node-config-input-port">Port</label>
+        <label for="node-config-input-port">port</label>
         <input type="number" id="node-config-input-port" placeholder="465" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-secure">Secure</label>
+        <label for="node-config-input-secure">secure</label>
         <input type="checkbox" id="node-config-input-secure" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-authType">Auth</label>
+        <label for="node-config-input-authType">auth</label>
         <select
             id="node-config-input-authType"
             style="width: calc(100% - 180px);"
@@ -51,23 +51,28 @@
         </select>
     </div>
     <div class="form-row">
-        <label for="node-config-input-user">User</label>
+        <label for="node-config-input-user">user</label>
         <input type="text" id="node-config-input-user" />
     </div>
     <div class="form-row">
-        <label for="node-config-input-pass">Password</label>
+        <label for="node-config-input-pass">password</label>
         <input type="password" id="node-config-input-pass" />
     </div>
 </script>
 
-<script type="text/html" data-help-name="email-transport">
-    <p>SMTP Transport configuration</p>
+<script type="text/markdown" data-help-name="email-transport">
+## SMTP Config
+
+-   **host** - is the hostname or ip address to connect to
+-   **port** - is the port to connect to
+-   **secure** – if true the connection will use TLS when connecting to server. If false (the default) then TLS is used if server supports the STARTTLS extension. In most cases set this value to true if you are connecting to port 465. For port 587 or 25 keep it false
+-   **auth** - authentication 'none' or 'login'
 </script>
 
 <script type="text/javascript">
     RED.nodes.registerType("email-send", {
         category: "social",
-        color: "#a6bbcf",
+        color: "#90CAF9",
         defaults: {
             transport: { type: "email-transport" },
             from: { value: "" },
@@ -80,7 +85,7 @@
         },
         inputs: 1,
         outputs: 1,
-        icon: "file.png",
+        icon: "envelope.svg",
         label: function () {
             return this.name || "send email";
         },
@@ -89,42 +94,136 @@
 
 <script type="text/html" data-template-name="email-send">
     <div class="form-row">
-        <label for="node-input-transport">smtp</label>
+        <label for="node-input-transport">transport</label>
         <input type="text" id="node-input-transport" />
     </div>
     <div class="form-row">
         <label for="node-input-from">from</label>
-        <input type="text" id="node-input-from" placeholder="msg.from" />
+        <input type="text" id="node-input-from" placeholder="msg.email.from" />
     </div>
     <div class="form-row">
         <label for="node-input-to">to</label>
-        <input type="text" id="node-input-to" placeholder="msg.to" />
+        <input type="text" id="node-input-to" placeholder="msg.email.to" />
     </div>
     <div class="form-row">
         <label for="node-input-cc">cc</label>
-        <input type="text" id="node-input-cc" placeholder="msg.cc" />
+        <input type="text" id="node-input-cc" placeholder="msg.email.cc" />
     </div>
     <div class="form-row">
         <label for="node-input-bcc">bcc</label>
-        <input type="text" id="node-input-bcc" placeholder="msg.bcc" />
+        <input type="text" id="node-input-bcc" placeholder="msg.email.bcc" />
     </div>
     <div class="form-row">
         <label for="node-input-subject">subject</label>
-        <input type="text" id="node-input-subject" placeholder="msg.subject" />
+        <input
+            type="text"
+            id="node-input-subject"
+            placeholder="msg.email.subject"
+        />
     </div>
     <div class="form-row">
         <label for="node-input-contentType">content type</label>
         <select id="node-input-contentType" style="width: calc(100% - 180px);">
             <option value="text">text</option>
             <option value="html">html</option>
+            <option value="html">amp</option>
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <label for="node-input-name">name</label>
         <input type="text" id="node-input-name" placeholder="Name" />
     </div>
 </script>
 
-<script type="text/html" data-help-name="email-send">
-    <p>Send email</p>
+<script type="text/markdown" data-help-name="email-send">
+## Send Mail Node Input
+
+-   **from** - The email address of the sender. All email addresses can be plain ‘sender@server.com’ or formatted '“Sender Name” sender@server.com', see Address object for details
+-   **to** - Comma separated list or an array of recipients email addresses that will appear on the To: field
+-   **cc** - Comma separated list or an array of recipients email addresses that will appear on the Cc: field
+-   **bcc** - Comma separated list or an array of recipients email addresses that will appear on the Bcc: field
+-   **subject** - The subject of the email
+-   **text** - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘/var/data/…'})
+-   **html** - The HTML version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘http://…'})
+-   **attachments** - An array of attachment objects (see [Using attachments](https://nodemailer.com/message/attachments/) for details). Attachments can be used for embedding images as well.
+
+`msg.payload` will used as mail.text or mail.html, depending on `content-type` field is set to text, html or amp.
+
+Use the node form to define the fields or let the form fields empty and use `msg.email` instead:
+
+```js
+msg.email = {
+    from: "foo@example.com",
+    to: "bar@example.com",
+    subject: "Test",
+    text: "This is my mail",
+    attachments: [
+        {
+            // utf-8 string as an attachment
+            filename: "text1.txt",
+            content: "hello world!",
+        },
+        {
+            // binary buffer as an attachment
+            filename: "text2.txt",
+            content: new Buffer("hello world!", "utf-8"),
+        },
+        {
+            // file on disk as an attachment
+            filename: "text3.txt",
+            path: "/path/to/file.txt", // stream this file
+        },
+        {
+            // filename and content type is derived from path
+            path: "/path/to/file.txt",
+        },
+        {
+            // stream as an attachment
+            filename: "text4.txt",
+            content: fs.createReadStream("file.txt"),
+        },
+        {
+            // define custom content type for the attachment
+            filename: "text.bin",
+            content: "hello world!",
+            contentType: "text/plain",
+        },
+        {
+            // use URL as an attachment
+            filename: "license.txt",
+            path: "https://raw.github.com/nodemailer/nodemailer/master/LICENSE",
+        },
+        {
+            // encoded string as an attachment
+            filename: "text1.txt",
+            content: "aGVsbG8gd29ybGQh",
+            encoding: "base64",
+        },
+        {
+            // data uri as an attachment
+            path: "data:text/plain;base64,aGVsbG8gd29ybGQ=",
+        },
+        {
+            // use pregenerated MIME node
+            raw:
+                "Content-Type: text/plain\r\n" +
+                "Content-Disposition: attachment;\r\n" +
+                "\r\n" +
+                "Hello world!",
+        },
+    ],
+};
+```
+
+## Send Mail Node Output
+
+output `msg.payload` includes the result, the exact format depends on the transport mechanism used
+
+-   `msg.payload.messageId` - most transports should return the final Message-Id value used with this property
+-   `msg.payload.envelope` includes the envelope object for the message
+-   `msg.payload.accepted` is an array returned by SMTP transports (includes recipient addresses that were accepted by the server)
+-   `msg.payload.rejected` is an array returned by SMTP transports (includes recipient addresses that were rejected by the server)
+-   `msg.payload.pending` is an array returned by Direct SMTP transport. Includes recipient addresses that were temporarily rejected together with the server response
+    response is a string returned by SMTP transports and includes the last SMTP response from the server
+
 </script>

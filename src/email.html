@@ -4,57 +4,59 @@
         color: "#a6bbcf",
         defaults: {
             host: { value: "", required: true },
-            port: { value: "", required: true },
+            port: { value: "" },
             secure: { value: false },
             authType: { value: "login" },
             name: { value: "" },
         },
         credentials: {
-            user: "",
-            pass: "",
+            user: { value: "", type: "text" },
+            pass: { value: "", type: "password" },
         },
-        icon: "file.png",
         label: function () {
-            return this.name || "email config";
+            return this.name || this.host || "smtp config";
         },
     });
 </script>
 
 <script type="text/html" data-template-name="email-transport">
     <div class="form-row">
-        <label for="node-input-host">Host</label>
+        <label for="node-config-input-name">Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host">Host</label>
         <input
             type="text"
-            id="node-input-host"
+            id="node-config-input-host"
             placeholder="smtp.example.com"
         />
     </div>
     <div class="form-row">
-        <label for="node-input-port">Port</label>
-        <input type="number" id="node-input-port" placeholder="465" />
+        <label for="node-config-input-port">Port</label>
+        <input type="number" id="node-config-input-port" placeholder="465" />
     </div>
     <div class="form-row">
-        <label for="node-input-secure">Secure</label>
-        <input type="checkbox" id="node-input-secure" />
+        <label for="node-config-input-secure">Secure</label>
+        <input type="checkbox" id="node-config-input-secure" />
     </div>
     <div class="form-row">
-        <label for="node-input-authType">AuthType</label>
-        <select id="node-input-authType" style="width: calc(100% - 180px);">
+        <label for="node-config-input-authType">Auth</label>
+        <select
+            id="node-config-input-authType"
+            style="width: calc(100% - 180px);"
+        >
             <option value="none">none</option>
             <option value="login">login</option>
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-user">User</label>
-        <input type="text" id="node-input-user" />
+        <label for="node-config-input-user">User</label>
+        <input type="text" id="node-config-input-user" />
     </div>
     <div class="form-row">
-        <label for="node-input-pass">Password</label>
-        <input type="password" id="node-input-pass" />
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name" />
+        <label for="node-config-input-pass">Password</label>
+        <input type="password" id="node-config-input-pass" />
     </div>
 </script>
 
@@ -87,9 +89,7 @@
 
 <script type="text/html" data-template-name="email-send">
     <div class="form-row">
-        <label for="node-input-transport">
-            <i class="fa fa-server"></i> Transport
-        </label>
+        <label for="node-input-transport">smtp</label>
         <input type="text" id="node-input-transport" />
     </div>
     <div class="form-row">

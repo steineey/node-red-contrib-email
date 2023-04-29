@@ -5,12 +5,18 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
         const node = this;
         node.transporter = nodemailer.createTransport({
-            ...config,
-            port: parseInt(config.port || "25", 10),
+            host: config.host,
+            port: parseInt(config.port, 10),
             auth: { ...node.credentials },
+            secure: config.secure,
         });
     }
-    RED.nodes.registerType("email-transport", EmailTransport);
+    RED.nodes.registerType("email-transport", EmailTransport, {
+        credentials: {
+            user: { type: "text" },
+            pass: { type: "password" },
+        },
+    });
 
     function EmailSend(config) {
         RED.nodes.createNode(this, config);
@@ -27,6 +33,7 @@ module.exports = function (RED) {
         // verify connection configuration
         transporter.verify(function (error, success) {
             if (error) {
+                node.error(error);
                 node.status({
                     fill: "red",
                     shape: "dot",

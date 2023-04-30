@@ -8,7 +8,7 @@ You can install by using the *Menu - Manage Palette* option, or running the foll
 
 ```sh
 cd ~/.node-red
-npm install --save node-red-node-email
+npm install --save node-red-contrib-email
 ```
 
 ## Requirements

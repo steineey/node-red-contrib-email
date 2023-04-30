@@ -49,6 +49,14 @@ module.exports = function (RED) {
         });
 
         node.on("input", function (msg, send, done) {
+
+            // set node status
+            node.status({
+                fill: "blue",
+                shape: "dot",
+                text: `success ${counter.success}, error ${counter.error}`,
+            });
+
             const m = msg.email || {};
             const mail = {
                 from: config.from || m.from,
@@ -81,7 +89,7 @@ module.exports = function (RED) {
                     node.status({
                         fill: "red",
                         shape: "dot",
-                        text: `success ${counter.success} | error ${counter.error}`,
+                        text: `success ${counter.success}, error ${counter.error}`,
                     });
                     done(err);
                     return;
@@ -95,7 +103,7 @@ module.exports = function (RED) {
                 node.status({
                     fill: "green",
                     shape: "dot",
-                    text: `success ${counter.success} | error ${counter.error}`,
+                    text: `success ${counter.success}, error ${counter.error}`,
                 });
 
                 send(msg);

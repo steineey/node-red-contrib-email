@@ -37,13 +37,13 @@ module.exports = function (RED) {
                 node.status({
                     fill: "red",
                     shape: "dot",
-                    text: "connection test failed",
+                    text: "connection failed",
                 });
             } else {
                 node.status({
                     fill: "green",
                     shape: "dot",
-                    text: "connection test success",
+                    text: "connected",
                 });
             }
         });

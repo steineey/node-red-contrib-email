@@ -16,7 +16,7 @@ npm install --save node-red-contrib-email
 NodeJS version >= 6.0.0 \
 Node-RED >= 2.0.0
 
-## SMTP Config Node
+## SMTP (Transport) Config Node
 
 -   **host** - is the hostname or ip address to connect to
 -   **port** - is the port to connect to
@@ -138,3 +138,8 @@ output `msg.payload` includes the result, the exact format depends on the transp
 -   `msg.payload.rejected` is an array returned by SMTP transports (includes recipient addresses that were rejected by the server)
 -   `msg.payload.pending` is an array returned by Direct SMTP transport. Includes recipient addresses that were temporarily rejected together with the server response
     response is a string returned by SMTP transports and includes the last SMTP response from the server
+
+## Connection Test
+
+SMTP connection is verified at node startup and displayed as node status.
+Be aware though that this call only tests connection and authentication but it does not check if the service allows you to use a specific envelope From address or not.

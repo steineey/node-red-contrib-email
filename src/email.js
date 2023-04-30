@@ -27,6 +27,12 @@ module.exports = function (RED) {
             return;
         }
 
+        // request counter
+        const counter = {
+            success: 0,
+            error: 0,
+        };
+
         // smtp transporter
         const transporter = transport.transporter;
 
@@ -77,11 +83,6 @@ module.exports = function (RED) {
             } else {
                 mail.text = msg.payload;
             }
-
-            const counter = {
-                success: 0,
-                error: 0,
-            };
 
             transporter.sendMail(mail, function (err, info) {
                 if (err) {

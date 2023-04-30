@@ -10,6 +10,12 @@ module.exports = function (RED) {
             auth: { ...node.credentials },
             secure: config.secure,
         });
+
+        node.on("close", function (removed, done) {
+            done = done || function () {};
+            node.transporter.close();
+            done();
+        });
     }
     RED.nodes.registerType("email-transport", EmailTransport, {
         credentials: {

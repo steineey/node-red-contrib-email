@@ -143,3 +143,23 @@ output `msg.payload` includes the result, the exact format depends on the transp
 
 SMTP connection is verified at node startup and displayed as node status.
 Be aware though that this call only tests connection and authentication but it does not check if the service allows you to use a specific envelope From address or not.
+
+## More Information
+
+This node is based on *nodemailer*. Read their documentation for a deeper understanding:
+
+- [smtp configuration](https://nodemailer.com/smtp/)
+- [message configuration](https://nodemailer.com/message/)
+
+## Feature Requests
+
+Feel free to contact me for any feature request.
+
+Features not implemented yet:
+
+- Proxy Support
+- OAuth2 authentication
+- Pooled SMTP
+- Delivery status notification
+- Calendar events
+

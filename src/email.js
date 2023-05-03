@@ -9,6 +9,7 @@ module.exports = function (RED) {
             port: parseInt(config.port, 10),
             auth: { ...node.credentials },
             secure: config.secure,
+            proxy: config.proxy || undefined
         });
 
         node.on("close", function (removed, done) {
@@ -42,6 +43,8 @@ module.exports = function (RED) {
         // smtp transporter
         const transporter = transport.transporter;
 
+        let firstInput = false;
+
         // verify connection configuration
         transporter.verify(function (error, success) {
             if (error) {
@@ -51,7 +54,10 @@ module.exports = function (RED) {
                     shape: "dot",
                     text: "connection failed",
                 });
-            } else {
+                return;
+            } 
+            
+            if(!firstInput) {
                 node.status({
                     fill: "green",
                     shape: "dot",
@@ -62,6 +68,8 @@ module.exports = function (RED) {
 
         node.on("input", function (msg, send, done) {
 
+            firstInput = true;
+
             // set node status
             node.status({
                 fill: "blue",
@@ -71,11 +79,11 @@ module.exports = function (RED) {
 
             const m = msg.email || {};
             const mail = {
-                from: config.from || m.from,
-                to: config.to || m.to,
-                cc: config.cc || m.cc,
-                bcc: config.bcc || m.bcc,
-                subject: config.subject || m.subject,
+                from:  m.from || config.from,
+                to:  m.to || config.to,
+                cc:  m.cc || config.cc,
+                bcc: m.bcc || config.bcc,
+                subject: m.subject || config.subject,
                 attachments: m.attachments,
                 text: m.text,
                 html: m.html,

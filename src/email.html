@@ -8,6 +8,7 @@
             port: { value: "" },
             secure: { value: false },
             authType: { value: "login" },
+            proxy: { value: "" },
         },
         credentials: {
             user: { value: "", type: "text" },
@@ -58,6 +59,10 @@
         <label for="node-config-input-pass">password</label>
         <input type="password" id="node-config-input-pass" />
     </div>
+    <div class="form-row">
+        <label for="node-config-input-proxy">proxy</label>
+        <input type="text" id="node-config-input-proxy" />
+    </div>
 </script>
 
 <script type="text/markdown" data-help-name="email-transport">
@@ -67,6 +72,7 @@
 -   **port** - is the port to connect to
 -   **secure** – if true the connection will use TLS when connecting to server. If false (the default) then TLS is used if server supports the STARTTLS extension. In most cases set this value to true if you are connecting to port 465. For port 587 or 25 keep it false
 -   **auth** - authentication 'none' or 'login'
+-   **proxy** - is a proxy URL, for example 'http://proxy-host:1234'
 </script>
 
 <script type="text/javascript">
@@ -122,7 +128,7 @@
         />
     </div>
     <div class="form-row">
-        <label for="node-input-contentType">content type</label>
+        <label for="node-input-contentType">payload type</label>
         <select id="node-input-contentType" style="width: calc(100% - 180px);">
             <option value="text">text</option>
             <option value="html">html</option>
@@ -143,20 +149,21 @@
 -   **cc** - Comma separated list or an array of recipients email addresses that will appear on the Cc: field
 -   **bcc** - Comma separated list or an array of recipients email addresses that will appear on the Bcc: field
 -   **subject** - The subject of the email
+
+### Message Payload
+
+`msg.payload` can be used for one of the following message versions. Set the node property *payload type* to set the version of your `msg.payload`.
+
 -   **text** - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘/var/data/…'})
 -   **html** - The HTML version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘http://…'})
--   **attachments** - An array of attachment objects (see [Using attachments](https://nodemailer.com/message/attachments/) for details). Attachments can be used for embedding images as well.
+-   **amp** - AMP4EMAIL specific HTML version of the message, same usage as with text and html. See AMP example below for usage or this [blogpost](https://blog.nodemailer.com/2019/12/30/testing-amp4email-with-nodemailer/) for sending and rendering.
 
-`msg.payload` will used as mail.text or mail.html, depending on `content-type` field is set to text, html or amp.
+### Attachments
 
-Use the node form to define the fields or let the form fields empty and use `msg.email` instead:
+Set `msg.email.attachments` as an array of attachment objects (see [Using attachments](https://nodemailer.com/message/attachments/) for details). Attachments can be used for embedding images as well.
 
 ```js
 msg.email = {
-    from: "foo@example.com",
-    to: "bar@example.com",
-    subject: "Test",
-    text: "This is my mail",
     attachments: [
         {
             // utf-8 string as an attachment
@@ -212,6 +219,34 @@ msg.email = {
                 "Hello world!",
         },
     ],
+};
+```
+
+### Overwrite Node Properties
+
+Use the node editor to define the email fields or overwrite this properties with a flow msg:
+
+```js
+msg.email = {
+    from: "foo@example.com",
+    to: "bar@example.com",
+    subject: "Test",
+    text: "This is the plain text version.",
+    html: "<h1>This is the html version</h1>",
+    attachments: [
+        {
+            // utf-8 string as an attachment
+            filename: "text1.txt",
+            content: "hello world!",
+        }
+    ],
+};
+```
+
+Only overwrite email.to:
+```js
+msg.email = {
+    to: "receiver@example.com"
 };
 ```
 

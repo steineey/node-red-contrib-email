@@ -2,6 +2,12 @@
 
 SMTP email node for Node-RED
 
+[![npm version](https://img.shields.io/npm/v/node-red-contrib-email.svg?style=flat-square)](https://www.npmjs.org/package/node-red-contrib-email)
+[![install size](https://img.shields.io/badge/dynamic/json?url=https://packagephobia.com/v2/api.json?p=node-red-contrib-email&query=$.install.pretty&label=install%20size&style=flat-square)](https://packagephobia.now.sh/result?p=node-red-contrib-email)
+[![npm downloads](https://img.shields.io/npm/dm/node-red-contrib-email.svg?style=flat-square)](https://npm-stat.com/charts.html?package=node-red-contrib-email)
+
+![node-email-send](https://raw.githubusercontent.com/steineey/node-red-contrib-email/master/examples/node-email-send.png)
+
 ## Installation 
 
 You can install by using the *Menu - Manage Palette* option, or running the following command in your Node-RED user directory - typically ~/.node-red
@@ -22,6 +28,7 @@ Node-RED >= 2.0.0
 -   **port** - is the port to connect to
 -   **secure** – if true the connection will use TLS when connecting to server. If false (the default) then TLS is used if server supports the STARTTLS extension. In most cases set this value to true if you are connecting to port 465. For port 587 or 25 keep it false
 -   **auth** - authentication 'none' or 'login'
+-   **proxy** - is a proxy URL, for example 'http://proxy-host:1234'
 
 ## Send Mail Node Input
 
@@ -30,20 +37,21 @@ Node-RED >= 2.0.0
 -   **cc** - Comma separated list or an array of recipients email addresses that will appear on the Cc: field
 -   **bcc** - Comma separated list or an array of recipients email addresses that will appear on the Bcc: field
 -   **subject** - The subject of the email
+
+### Message Payload
+
+`msg.payload` can be used for one of the following message versions. Set the node property *payload type* to set the version of your `msg.payload`.
+
 -   **text** - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘/var/data/…'})
 -   **html** - The HTML version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘http://…'})
--   **attachments** - An array of attachment objects (see [Using attachments](https://nodemailer.com/message/attachments/) for details). Attachments can be used for embedding images as well.
+-   **amp** - AMP4EMAIL specific HTML version of the message, same usage as with text and html. See AMP example below for usage or this [blogpost](https://blog.nodemailer.com/2019/12/30/testing-amp4email-with-nodemailer/) for sending and rendering.
 
-`msg.payload` will used as mail.text or mail.html, depending on `content-type` field is set to text, html or amp.
+### Attachments
 
-Use the node form to define the fields or let the form fields empty and use `msg.email` instead:
+Set `msg.email.attachments` as an array of attachment objects (see [Using attachments](https://nodemailer.com/message/attachments/) for details). Attachments can be used for embedding images as well.
 
 ```js
 msg.email = {
-    from: "foo@example.com",
-    to: "bar@example.com",
-    subject: "Test",
-    text: "This is my mail",
     attachments: [
         {
             // utf-8 string as an attachment
@@ -102,7 +110,35 @@ msg.email = {
 };
 ```
 
-example for amp message
+### Overwrite Node Properties
+
+Use the node editor to define the email fields or overwrite this properties with a flow msg:
+
+```js
+msg.email = {
+    from: "foo@example.com",
+    to: "bar@example.com",
+    subject: "Test",
+    text: "This is the plain text version.",
+    html: "<h1>This is the html version</h1>",
+    attachments: [
+        {
+            // utf-8 string as an attachment
+            filename: "text1.txt",
+            content: "hello world!",
+        }
+    ],
+};
+```
+
+Only overwrite email.to:
+```js
+msg.email = {
+    to: "receiver@example.com"
+};
+```
+
+Example for amp message:
 
 ```js
 msg.email = {
@@ -157,7 +193,6 @@ Feel free to contact me for any feature request.
 
 Features not implemented yet:
 
-- Proxy Support
 - OAuth2 authentication
 - Pooled SMTP
 - Delivery status notification

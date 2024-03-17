@@ -42,7 +42,7 @@ Node-RED >= 2.0.0
 
 `msg.payload` can be used for one of the following message versions. Set the node property *payload type* to set the version of your `msg.payload`.
 
--   **text** - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘/var/data/…'})
+-   **text** - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘/var/data/…'}). If you're sending a `msg.payload` of type number or boolean, then it is converted to string.
 -   **html** - The HTML version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘http://…'})
 -   **amp** - AMP4EMAIL specific HTML version of the message, same usage as with text and html. See AMP example below for usage or this [blogpost](https://blog.nodemailer.com/2019/12/30/testing-amp4email-with-nodemailer/) for sending and rendering.
 

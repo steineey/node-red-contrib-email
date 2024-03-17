@@ -9,8 +9,12 @@ module.exports = function (RED) {
             port: parseInt(config.port, 10),
             auth: { ...node.credentials },
             secure: config.secure,
-            proxy: config.proxy || undefined
+            proxy: config.proxy || undefined,
         });
+
+        node.transporter.on("error", (err)=> {
+            console.log("ERROR", err);
+        })
 
         node.on("close", function (removed, done) {
             done = done || function () {};
@@ -18,6 +22,7 @@ module.exports = function (RED) {
             done();
         });
     }
+
     RED.nodes.registerType("email-transport", EmailTransport, {
         credentials: {
             user: { type: "text" },
@@ -55,9 +60,9 @@ module.exports = function (RED) {
                     text: "connection failed",
                 });
                 return;
-            } 
-            
-            if(!firstInput) {
+            }
+
+            if (!firstInput) {
                 node.status({
                     fill: "green",
                     shape: "dot",
@@ -66,8 +71,7 @@ module.exports = function (RED) {
             }
         });
 
-        node.on("input", function (msg, send, done) {
-
+        node.sendEmail = async (msg, send, done) => {
             firstInput = true;
 
             // set node status
@@ -79,11 +83,15 @@ module.exports = function (RED) {
 
             const m = msg.email || {};
             const mail = {
-                from:  m.from || config.from,
-                to:  m.to || config.to,
-                cc:  m.cc || config.cc,
+                from: m.from || config.from,
+                to: m.to || config.to,
+                cc: m.cc || config.cc,
                 bcc: m.bcc || config.bcc,
-                subject: m.subject || config.subject,
+                subject:
+                    m.subject ||
+                    config.subject ||
+                    msg.topic ||
+                    "Message from Node-RED",
                 attachments: m.attachments,
                 text: m.text,
                 html: m.html,
@@ -95,11 +103,36 @@ module.exports = function (RED) {
             } else if (config.contentType === "amp") {
                 mail.amp = msg.payload;
             } else {
-                mail.text = msg.payload;
+                // plain text message
+                // nodemailer is expecting a Unicode string, Buffer, Stream or an attachment-like object
+                if (
+                    typeof msg.payload === "number" ||
+                    typeof msg.payload === "boolean"
+                ) {
+                    mail.text = String(msg.payload);
+                } else {
+                    mail.text = msg.payload;
+                }
             }
 
-            transporter.sendMail(mail, function (err, info) {
-                if (err) {
+            transporter
+                .sendMail(mail)
+                .then((info) => {
+                    delete msg.email;
+                    msg.payload = info;
+
+                    // increase success count
+                    counter.success++;
+                    node.status({
+                        fill: "green",
+                        shape: "dot",
+                        text: `success ${counter.success}, error ${counter.error}`,
+                    });
+
+                    send(msg);
+                    done();
+                })
+                .catch((err) => {
                     counter.error++;
                     node.status({
                         fill: "red",
@@ -107,24 +140,11 @@ module.exports = function (RED) {
                         text: `success ${counter.success}, error ${counter.error}`,
                     });
                     done(err);
-                    return;
-                }
-                delete msg.email;
-
-                msg.payload = info;
-
-                // increase success count
-                counter.success++;
-                node.status({
-                    fill: "green",
-                    shape: "dot",
-                    text: `success ${counter.success}, error ${counter.error}`,
                 });
+        };
 
-                send(msg);
-                done();
-            });
-        });
+        node.on("input", node.sendEmail);
     }
+
     RED.nodes.registerType("email-send", EmailSend);
 };

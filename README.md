@@ -32,15 +32,16 @@ Node-RED >= 2.0.0
 
 ## Send Mail Node Input
 
--   **from** - The email address of the sender. All email addresses can be plain ‘sender@server.com’ or formatted '“Sender Name” sender@server.com', see Address object for details
--   **to** - Comma separated list or an array of recipients email addresses that will appear on the To: field
--   **cc** - Comma separated list or an array of recipients email addresses that will appear on the Cc: field
--   **bcc** - Comma separated list or an array of recipients email addresses that will appear on the Bcc: field
--   **subject** - The subject of the email
+-   **from** - The email address of the sender. All email addresses can be plain ‘sender@server.com’ or formatted '“Sender Name” sender@server.com', see Address object for details. Can be overwritten with `msg.email.from`.
+-   **to** - Comma separated list or an array of recipients email addresses that will appear on the To: field. Can be overwritten with `msg.email.to`.
+-   **cc** - Comma separated list or an array of recipients email addresses that will appear on the Cc: field. Can be overwritten with `msg.email.cc`.
+-   **bcc** - Comma separated list or an array of recipients email addresses that will appear on the Bcc: field. Can be overwritten with `msg.email.bcc`.
+-   **subject** - The subject of the email. Can be overwritten with `msg.email.subject`.
+-   **priority** -  Sets message importance headers, either ‘high’, ‘normal’ (default) or ‘low’. Can be overwritten with `msg.email.priority`.
 
 ### Message Payload
 
-`msg.payload` can be used for one of the following message versions. Set the node property *payload type* to set the version of your `msg.payload`.
+`msg.payload` can be used for one of the following message versions. Set the node property **payload type** to set the version of your `msg.payload`.
 
 -   **text** - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘/var/data/…'}). If you're sending a `msg.payload` of type number or boolean, then it is converted to string.
 -   **html** - The HTML version of the message as an Unicode string, Buffer, Stream or an attachment-like object ({path: ‘http://…'})

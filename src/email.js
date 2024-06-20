@@ -96,6 +96,7 @@ module.exports = function (RED) {
                 text: m.text,
                 html: m.html,
                 amp: m.amp,
+                priority: m.priority || config.priority || "normal"
             };
 
             if (config.contentType === "html") {
